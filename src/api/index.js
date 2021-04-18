@@ -13,11 +13,8 @@ const buildUrl = curry((baseUrl, params) =>
   reduce(buildQueryParams, baseUrl, params)
 );
 
-const buildRequest = curry((baseUrl, client, params) => {
-  const paramPairs = toPairs(params);
-  const requestUrl = buildUrl(baseUrl);
-
-  return compose(client, requestUrl)(paramPairs);
-});
+const buildRequest = curry((baseUrl, client, params) =>
+  compose(client, buildUrl(baseUrl))(toPairs(params))
+);
 
 export { buildUrl, buildRequest };
