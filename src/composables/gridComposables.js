@@ -9,4 +9,4 @@ const getGrid = getReactive(grid);
 const buildReactiveGrid = compose(setGrid, buildGrid);
 const removeSlugFromGrid = compose(setGrid, removeFrom(getGrid));
 
-export { grid, buildReactiveGrid, removeSlugFromGrid };
+export { grid, buildReactiveGrid, removeSlugFromGrid, setGrid, getGrid };
