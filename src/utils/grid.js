@@ -5,6 +5,9 @@ import reduce from "ramda/src/reduce";
 import not from "ramda/src/not";
 import filter from "ramda/src/filter";
 import propEq from "ramda/src/propEq";
+import map from "ramda/src/map";
+import sort from "ramda/src/sort";
+import dissoc from "ramda/src/dissoc";
 
 const tiePair = (pair) => {
   const [pair1, pair2] = pair;
@@ -26,4 +29,18 @@ const notSlug = (slug) => compose(not, propEq("slug", slug));
 
 const removeFromGrid = (slug, grid) => filter(notSlug(slug), grid);
 
-export { buildGrid, removeFromGrid };
+/**
+ * Associates random number with each item, sorts based on random number, disassociates random number
+ * @param {Array} Array to be shuffled
+ * @returns Array
+ */
+const shuffle = (arr) => {
+  const associateRandomNumber = (o) => assoc("random", Math.random(), o);
+  const shuffled = sort(
+    (a, b) => a.random - b.random,
+    map(associateRandomNumber, arr)
+  );
+  return map(dissoc("random"), shuffled);
+};
+
+export { buildGrid, removeFromGrid, shuffle };
