@@ -14,12 +14,13 @@
 
 <script>
 import MemoryGridTile from "./MemoryGridTile.vue";
-import { buildGrid, removeFromGrid } from "../utils/grid.js";
+import { buildGrid, removeFromGrid, shuffle } from "../utils/grid.js";
 import { fetchImagesByQuery } from "../api/giphyClient.js";
 import { getFixedImages } from "../utils/apiParser.js";
 import take from "ramda/src/take";
 import map from "ramda/src/map";
 import assoc from "ramda/src/assoc";
+import compose from "ramda/src/compose";
 export default {
   name: "MemoryGrid",
   data: () => ({
@@ -42,16 +43,19 @@ export default {
   methods: {
     setStatusMessage(status) {
       this.statusMessage = status;
-      this.delay(
-        () => (this.statusMessage = this.statusMessages.default),
-        3 * 1000
-      );
+      this.delayed(() => (this.statusMessage = this.statusMessages.default))(3);
     },
     checkCorrectSelection(tile) {
-      return this.selectedTile.sibling.slug === tile.slug;
+      return this.selectedTile.sibling.key === tile.key;
     },
-    delay(fn, time) {
-      this.timers.push(setTimeout(fn, time));
+    delay(fn, seconds) {
+      this.timers.push(setTimeout(fn, seconds * 1000));
+    },
+    delayed(fn) {
+      return (seconds, ...args) =>
+        this.timers.push(
+          setTimeout(() => fn.apply(this, args), seconds * 1000)
+        );
     },
     selectTile(tile, i) {
       this.grid[i].clicked = true;
@@ -59,30 +63,30 @@ export default {
         this.selectedTile = tile;
         return;
       }
+      if (this.selectedTile.key === tile.key) return; // selected same tile, short-circuit rest of check
       if (this.checkCorrectSelection(tile)) {
-        this.removeTile(tile);
+        this.delayed(this.removeTile)(3, tile);
         this.setStatusMessage(this.statusMessages.correct);
       } else {
         this.setWrongAnswer();
         this.setStatusMessage(this.statusMessages.wrong);
       }
       this.selectedTile = null;
-      this.delay(this.resetClickedProperties, 1 * 1000);
+      this.delayed(this.resetClickedProperties)(3); // second tile clicked, reset `clicked`
     },
     setWrongAnswer() {
-      this.wrongAnswer = true;
-      this.delay(() => (this.wrongAnswer = false), 3 * 1000);
+      this.delayed(() => (this.wrongAnswer = true))(0.8); // give tile chance to flip before marking wrong
+      this.delayed(() => (this.wrongAnswer = false))(3); // reset
     },
     resetClickedProperties() {
-      const resetClicked = assoc("clicked", false);
-      this.grid = map(resetClicked, this.grid);
+      this.grid = map(assoc("clicked", false), this.grid);
     },
     removeTile(tile) {
       this.grid = removeFromGrid(tile.slug, this.grid);
     },
     buildGridFromGiphyImages(json) {
       const takeN = take(this.gridSize / 2);
-      this.grid = buildGrid(getFixedImages(json.data, takeN));
+      this.grid = compose(shuffle, buildGrid, getFixedImages)(json.data, takeN);
     },
   },
   watch: {
