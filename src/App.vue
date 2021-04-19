@@ -1,14 +1,18 @@
 <template>
-  <memory-grid />
+  <style-provider>
+    <memory-grid />
+  </style-provider>
 </template>
 
 <script>
 import MemoryGrid from "./components/MemoryGrid.vue";
+import StyleProvider from "./components/StyleProvider.vue";
 
 export default {
   name: "App",
   components: {
     MemoryGrid,
+    StyleProvider,
   },
 };
 </script>
