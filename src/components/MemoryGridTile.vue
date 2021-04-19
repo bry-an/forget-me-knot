@@ -1,12 +1,18 @@
 <template>
-  <div>
-    {{ tile.clicked }}
-    <img
-      class="cursor-pointer"
-      @click="$emit('select-tile', tile, index)"
-      :src="tile.slug"
-      alt="memory-game-tile"
-    />
+  <div @click="$emit('select-tile', tile, index)" class="flip-tile">
+    <div :class="['flip-tile-inner', { 'flip-action': clicked }]">
+      <div class="flip-tile-front">
+        <img src="https://www.fillmurray.com/200/200" alt="memory-card-front" />
+      </div>
+      <div class="flip-tile-back flex items-center">
+        <img
+          class="cursor-pointer"
+          @click="$emit('select-tile', tile, index)"
+          :src="tile.slug"
+          alt="memory-game-tile"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -23,6 +29,46 @@ export default {
       default: 0,
     },
   },
+  computed: {
+    clicked() {
+      return this.tile.clicked;
+    },
+  },
 };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.flip-tile {
+  width: 200px;
+  height: 200px;
+  perspective: 1000px;
+  position: relative;
+}
+
+.flip-tile-inner {
+  position: relative;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.flip-tile-front,
+.flip-tile-back {
+  position: absolute;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+}
+.flip-card-front {
+  background-color: #bbb;
+  color: black;
+}
+
+.flip-tile-back {
+  width: 200px;
+  height: 200px;
+  background-color: black;
+  transform: rotateY(180deg);
+}
+
+.flip-action {
+  transform: rotateY(180deg);
+}
+</style>
