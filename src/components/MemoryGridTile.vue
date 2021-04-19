@@ -1,13 +1,16 @@
 <template>
-  <div @click="$emit('select-tile', tile, index)" class="flip-tile">
+  <div
+    @click="$emit('select-tile', tile, index)"
+    class="flip-tile cursor-pointer"
+  >
     <div :class="['flip-tile-inner', { 'flip-action': clicked }]">
       <div class="flip-tile-front">
         <img src="https://www.fillmurray.com/200/200" alt="memory-card-front" />
       </div>
       <div class="flip-tile-back flex items-center">
         <img
-          class="cursor-pointer"
           @click="$emit('select-tile', tile, index)"
+          :style="{ background: `url(${tile.slug})` }"
           :src="tile.slug"
           alt="memory-game-tile"
         />
