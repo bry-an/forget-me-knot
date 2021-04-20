@@ -13,7 +13,7 @@
       <div :class="['flip-tile-inner', { 'flip-action': clicked }]">
         <div class="flip-tile-front">
           <img
-            src="https://www.fillmurray.com/200/200"
+            src="../assets/images/bill-murray-painting.jpg"
             class="rounded-md"
             alt="memory-card-front"
           />
@@ -24,6 +24,7 @@
             :src="tile.slug"
             alt="memory-game-tile"
             class="rounded-md"
+            width="150"
           />
         </div>
       </div>
@@ -67,8 +68,8 @@ export default {
 .base-icon {
   z-index: 10;
   position: absolute;
-  left: 25%;
-  transform: translateY(50%);
+  left: 18%;
+  transform: translateY(35%);
 }
 .wrong-icon {
   color: $mem-terracotta;
@@ -77,8 +78,8 @@ export default {
   color: $mem-mint;
 }
 .flip-tile {
-  height: 200px;
-  width: 200px;
+  height: 150px;
+  width: 150px;
   perspective: 1000px;
   position: relative;
 }
@@ -100,8 +101,8 @@ export default {
 }
 
 .flip-tile-back {
-  width: 200px;
-  height: 200px;
+  width: 150px;
+  height: 150px;
   background-color: white;
   transform: rotateY(180deg);
 }
