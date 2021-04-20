@@ -8,6 +8,7 @@
       :tile="tile"
       :index="i"
       :class="{ shake: tile.clicked && wrongAnswer }"
+      :icon="getTileOverlay(tile)"
     />
   </div>
 </template>
@@ -28,6 +29,7 @@ export default {
     gridSize: 24,
     selectedTile: null,
     wrongAnswer: false,
+    rightAnswer: false,
     statusMessage: "Select a card",
     statusMessages: {
       default: "Select a card",
@@ -41,6 +43,11 @@ export default {
     MemoryGridTile,
   },
   methods: {
+    getTileOverlay(tile) {
+      if (this.wrongAnswer && tile.clicked) return "wrong-icon";
+      if (this.rightAnswer && tile.clicked) return "right-icon";
+      return "";
+    },
     setStatusMessage(status) {
       this.statusMessage = status;
       this.delayed(() => (this.statusMessage = this.statusMessages.default))(3);
@@ -67,16 +74,17 @@ export default {
       if (this.checkCorrectSelection(tile)) {
         this.delayed(this.removeTile)(3, tile);
         this.setStatusMessage(this.statusMessages.correct);
+        this.setAnswer("rightAnswer");
       } else {
-        this.setWrongAnswer();
+        this.setAnswer("wrongAnswer");
         this.setStatusMessage(this.statusMessages.wrong);
       }
       this.selectedTile = null;
       this.delayed(this.resetClickedProperties)(3); // second tile clicked, reset `clicked`
     },
-    setWrongAnswer() {
-      this.delayed(() => (this.wrongAnswer = true))(0.8); // give tile chance to flip before marking wrong
-      this.delayed(() => (this.wrongAnswer = false))(3); // reset
+    setAnswer(status) {
+      this.delayed(() => (this[status] = true))(0.8); // give tile chance to flip before marking
+      this.delayed(() => (this[status] = false))(3); // reset
     },
     resetClickedProperties() {
       this.grid = map(assoc("clicked", false), this.grid);

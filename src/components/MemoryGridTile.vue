@@ -1,27 +1,42 @@
 <template>
-  <div
-    @click="$emit('select-tile', tile, index)"
-    class="flip-tile cursor-pointer"
-  >
-    <div :class="['flip-tile-inner', { 'flip-action': clicked }]">
-      <div class="flip-tile-front">
-        <img src="https://www.fillmurray.com/200/200" alt="memory-card-front" />
-      </div>
-      <div class="flip-tile-back flex items-center">
-        <img
-          @click="$emit('select-tile', tile, index)"
-          :style="{ background: `url(${tile.slug})` }"
-          :src="tile.slug"
-          alt="memory-game-tile"
-        />
+  <div class="relative">
+    <app-icon
+      v-if="icon"
+      :scale="4"
+      :class="['base-icon', icon]"
+      :name="icon"
+    />
+    <div
+      @click="$emit('select-tile', tile, index)"
+      :class="['flip-tile cursor-pointer', { mask: icon !== '' }]"
+    >
+      <div :class="['flip-tile-inner', { 'flip-action': clicked }]">
+        <div class="flip-tile-front">
+          <img
+            src="https://www.fillmurray.com/200/200"
+            class="rounded-md"
+            alt="memory-card-front"
+          />
+        </div>
+        <div class="flip-tile-back flex items-center rounded-md">
+          <img
+            :style="{ background: `url(${tile.slug})` }"
+            :src="tile.slug"
+            alt="memory-game-tile"
+          />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import AppIcon from "./AppIcon.vue";
 export default {
   name: "MemoryGridTile",
+  components: {
+    AppIcon,
+  },
   props: {
     tile: {
       type: Object,
@@ -31,18 +46,41 @@ export default {
       type: Number,
       default: 0,
     },
+    icon: {
+      type: String,
+      default: "",
+    },
   },
   computed: {
     clicked() {
       return this.tile.clicked;
     },
+    getImage() {
+      const images = require.context("../assets/", false, /\.svg$/);
+      return images("./" + this.overlay + ".svg");
+    },
   },
 };
 </script>
 <style lang="scss" scoped>
+.mask {
+  opacity: 0.5;
+}
+.base-icon {
+  z-index: 10;
+  position: absolute;
+  left: 25%;
+  transform: translateY(50%);
+}
+.wrong-icon {
+  color: red;
+}
+.right-icon {
+  color: green;
+}
 .flip-tile {
-  width: 200px;
   height: 200px;
+  width: 200px;
   perspective: 1000px;
   position: relative;
 }
@@ -59,15 +97,14 @@ export default {
   -webkit-backface-visibility: hidden; /* Safari */
   backface-visibility: hidden;
 }
-.flip-card-front {
-  background-color: #bbb;
+.flip-tile-front {
   color: black;
 }
 
 .flip-tile-back {
   width: 200px;
   height: 200px;
-  background-color: black;
+  background-color: white;
   transform: rotateY(180deg);
 }
 
