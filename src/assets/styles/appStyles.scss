@@ -1,0 +1,59 @@
+$mem-terracotta: #E07A5F;
+$mem-plum: #3D405B;
+$mem-mint: #81B29A;
+$mem-sand: #F2CC8F;
+$mem-pebble: #F4F1DE;
+
+$font-xl: 2.356rem;
+$font-large: 1.738rem;
+$font-medium: 1.456rem;
+$font-schmedium: 1.3rem;
+$font-small: 1rem;
+$screen-sm: 640px;
+$screen-md: 768px;
+$screen-lg: 1024px;
+$screen-xl: 1280px;
+$screen-xxl: 1536px;
+
+@mixin sm {
+   @media (min-width: #{$screen-sm}) {
+       @content;
+   }
+}
+@mixin md {
+   @media (min-width: #{$screen-md}) {
+       @content;
+   }
+}
+@mixin lg {
+   @media (min-width: #{$screen-lg}) {
+       @content;
+   }
+}
+@mixin xl {
+   @media (min-width: #{$screen-xl}) {
+       @content;
+   }
+}
+
+@mixin xxl {
+   @media (min-width: #{$screen-xxl}) {
+       @content;
+   }
+}
+
+h1 {
+    font-size: 8.191rem; 
+}
+h2 {
+    font-size: 6.863rem;
+}
+h3 {
+    font-size: 5.063rem;
+}
+h4 {
+    font-size: 2.12rem;
+}
+h5 {
+    font-size: 1.738rem;
+}
