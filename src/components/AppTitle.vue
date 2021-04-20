@@ -1,6 +1,6 @@
 <template>
   <div class="mb-1">
-    <h1 class="text-plum text-center title py-2">Forget Me Knot</h1>
+    <h1 class="text-plum text-center title py-2">Memurray</h1>
     <h2 class="text-plum text-center subtitle py-2">a gif based memory game</h2>
   </div>
 </template>

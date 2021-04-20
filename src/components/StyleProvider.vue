@@ -12,5 +12,5 @@ export default {};
 <style lang="scss">
 @import "@/assets/styles/appStyles.scss";
 @import "@/assets/styles/reset.scss";
-@import url("https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
 </style>
