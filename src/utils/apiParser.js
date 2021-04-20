@@ -1,8 +1,9 @@
 import map from "ramda/src/map";
-const getFixedImage = (giphyImage) => {
-  return giphyImage.images.fixed_height.url;
-};
+import path from "ramda/src/path";
 
-const getFixedImages = (data, take) => take(map(getFixedImage, data));
+const getFixedImage = (giphyImage) =>
+  path(["images", "fixed_height", "url"], giphyImage);
+
+const getFixedImages = (take, data) => take(map(getFixedImage, data));
 
 export { getFixedImages };

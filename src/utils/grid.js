@@ -7,11 +7,13 @@ import map from "ramda/src/map";
 import sort from "ramda/src/sort";
 import dissoc from "ramda/src/dissoc";
 import when from "ramda/src/when";
+import head from "ramda/src/head";
+import last from "ramda/src/last";
 
-const tiePair = (pair) => {
-  const [pair1, pair2] = pair;
-  return [assoc("sibling", pair2, pair1), assoc("sibling", pair1, pair2)];
-};
+const tiePair = (pair) => [
+  assoc("sibling", last(pair), head(pair)),
+  assoc("sibling", head(pair), last(pair)),
+];
 
 const generatePair = (slug) => [
   { slug, key: `${slug}-1`, clicked: false, display: true },
@@ -35,13 +37,13 @@ const setClickedOnGridItem = (key, clicked, grid) =>
  * @param {Array} Array to be shuffled
  * @returns Array
  */
-const shuffle = (arr) => {
-  const associateRandomNumber = (o) => assoc("random", Math.random(), o);
-  const shuffled = sort(
-    (a, b) => a.random - b.random,
-    map(associateRandomNumber, arr)
+const shuffle = (arr) =>
+  map(
+    dissoc("random"),
+    sort(
+      (a, b) => a.random - b.random,
+      map((o) => assoc("random", Math.random(), o), arr)
+    )
   );
-  return map(dissoc("random"), shuffled);
-};
 
 export { buildGrid, removeFromDisplayedGrid, shuffle, setClickedOnGridItem };

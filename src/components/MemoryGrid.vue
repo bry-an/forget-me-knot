@@ -5,7 +5,9 @@
     :right-answer="rightAnswer"
     :remaining-tiles="remainingTiles"
   />
-  <div class="grid grid-cols-6 gap-x-3 gap-y-3 xl:gap-y-6">
+  <div
+    class="grid grid-cols-4 lg:grid-cols-6 gap-x-3 gap-y-3 xl:gap-y-6 m-auto"
+  >
     <div v-for="tile in grid" :key="tile.key" class="flex justify-center">
       <memory-grid-tile
         @select-tile="selectTile"
@@ -52,6 +54,7 @@ export default {
     },
     gameIsRunning: true,
     timers: [],
+    loading: false,
   }),
   components: {
     MemoryGridTile,
@@ -113,11 +116,17 @@ export default {
       this.grid = removeFromDisplayedGrid(tile.slug, this.grid);
     },
     buildGridFromGiphyImages(json) {
+      console.log("the data", JSON.stringify(json.data[0]));
       const takeN = take(this.gridSize / 2); // n size grid requires n/2 images
-      this.grid = compose(shuffle, buildGrid, getFixedImages)(json.data, takeN);
+      this.grid = compose(shuffle, buildGrid, getFixedImages)(takeN, json.data);
     },
     checkEndOfGame() {
       return not(this.remainingTiles);
+    },
+    getImages() {
+      return fetchImagesByQuery({ q: "bill murray" })
+        .then((res) => res.json())
+        .then(this.buildGridFromGiphyImages);
     },
   },
   computed: {
@@ -127,9 +136,8 @@ export default {
     },
   },
   mounted() {
-    fetchImagesByQuery({ q: "bill murray" })
-      .then((res) => res.json())
-      .then(this.buildGridFromGiphyImages);
+    this.loading = true;
+    this.getImages().then(() => (this.loading = false));
   },
   unmounted() {
     this.timers.length && this.timers.forEach((t) => clearTimeout(t));
