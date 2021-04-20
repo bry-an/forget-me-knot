@@ -3,6 +3,7 @@
     :status-message="statusMessage"
     :wrong-answer="wrongAnswer"
     :right-answer="rightAnswer"
+    :remaining-tiles="remainingTiles"
   />
   <div class="grid grid-cols-6 gap-x-3 gap-y-3 xl:gap-y-6">
     <div v-for="tile in grid" :key="tile.key" class="flex justify-center">
@@ -31,6 +32,10 @@ import take from "ramda/src/take";
 import map from "ramda/src/map";
 import assoc from "ramda/src/assoc";
 import compose from "ramda/src/compose";
+import filter from "ramda/src/filter";
+import propEq from "ramda/src/propEq";
+import length from "ramda/src/length";
+import not from "ramda/src/length";
 export default {
   name: "MemoryGrid",
   data: () => ({
@@ -39,10 +44,10 @@ export default {
     selectedTile: null,
     wrongAnswer: false,
     rightAnswer: false,
-    statusMessage: "Select a card!",
+    statusMessage: "Select a card",
     statusMessages: {
-      default: "Select a card!",
-      wrong: "Try again!",
+      default: "Select a card",
+      wrong: "Try again",
       right: "Correct!",
     },
     gameIsRunning: true,
@@ -72,8 +77,10 @@ export default {
         );
     },
     selectTile(tile) {
+      if (this.wrongAnswer || this.rightAnswer) return; // time between turns, don't do anything
       this.grid = setClickedOnGridItem(tile.key, true, this.grid);
       if (!this.selectedTile) {
+        // first tile picked, no need to check status
         this.selectedTile = tile;
         return;
       }
@@ -84,9 +91,10 @@ export default {
         return;
       }
       if (this.checkCorrectSelection(tile)) {
-        this.delayed(this.removeTile)(3, tile);
+        this.delayed(this.hideTile)(3, tile);
         this.setStatusMessage(this.statusMessages.right);
         this.setAnswer("rightAnswer");
+        this.gameIsRunning = this.checkEndOfGame() ? false : true;
       } else {
         this.setAnswer("wrongAnswer");
         this.setStatusMessage(this.statusMessages.wrong);
@@ -101,23 +109,25 @@ export default {
     resetClickedProperties() {
       this.grid = map(assoc("clicked", false), this.grid);
     },
-    removeTile(tile) {
+    hideTile(tile) {
       this.grid = removeFromDisplayedGrid(tile.slug, this.grid);
     },
     buildGridFromGiphyImages(json) {
-      const takeN = take(this.gridSize / 2);
+      const takeN = take(this.gridSize / 2); // n size grid requires n/2 images
       this.grid = compose(shuffle, buildGrid, getFixedImages)(json.data, takeN);
     },
+    checkEndOfGame() {
+      return not(this.remainingTiles);
+    },
   },
-  watch: {
-    grid(newVal) {
-      if (newVal.length === 0) {
-        this.gameIsRunning = false;
-      }
+  computed: {
+    remainingTiles() {
+      const getFilteredLength = compose(length, filter);
+      return getFilteredLength(propEq("display", true), this.grid);
     },
   },
   mounted() {
-    fetchImagesByQuery({ q: "computers" })
+    fetchImagesByQuery({ q: "bill murray" })
       .then((res) => res.json())
       .then(this.buildGridFromGiphyImages);
   },

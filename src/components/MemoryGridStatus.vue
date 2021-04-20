@@ -1,14 +1,15 @@
 <template>
-  <div class="flex justify-center mb-4 status">
-    <h3
+  <div class="flex justify-between my-4 status">
+    <h4
       :class="{
         'text-terracotta': wrongAnswer,
         'text-mint': rightAnswer,
         'text-plum': defaultStatus,
       }"
     >
-      {{ statusMessage }}
-    </h3>
+      > {{ statusMessage }}
+    </h4>
+    <h4 class="text-mint">Tiles remaining: {{ remainingTiles }}</h4>
   </div>
 </template>
 <script>
@@ -27,15 +28,21 @@ export default {
       type: Boolean,
       default: false,
     },
+    remainingTiles: {
+      type: [Number, String],
+      default: 0,
+    },
   },
-  defaultStatus() {
-    return !this.wrongAnswer && !this.rightAnswer;
+  computed: {
+    defaultStatus() {
+      return !this.wrongAnswer && !this.rightAnswer;
+    },
   },
 };
 </script>
 <style lang="scss" scoped>
 @import "@/assets/styles/appStyles.scss";
 .status {
-  font-family: "Red Hat Display", sans-serif;
+  font-family: "Press Start 2P", cursive;
 }
 </style>
