@@ -23,6 +23,7 @@
             :style="{ background: `url(${tile.slug})` }"
             :src="tile.slug"
             alt="memory-game-tile"
+            class="rounded-md"
           />
         </div>
       </div>
@@ -63,6 +64,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+@import "@/assets/styles/appStyles.scss";
 .mask {
   opacity: 0.5;
 }
@@ -73,10 +75,10 @@ export default {
   transform: translateY(50%);
 }
 .wrong-icon {
-  color: red;
+  color: $mem-terracotta;
 }
 .right-icon {
-  color: green;
+  color: $mem-mint;
 }
 .flip-tile {
   height: 200px;
