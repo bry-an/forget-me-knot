@@ -1,5 +1,5 @@
 <template>
-  <div class="relative">
+  <div v-show="tile.display" class="relative">
     <app-icon
       v-if="icon"
       :scale="4"
@@ -7,7 +7,7 @@
       :name="icon"
     />
     <div
-      @click="$emit('select-tile', tile, index)"
+      @click="$emit('select-tile', tile)"
       :class="['flip-tile cursor-pointer', { mask: icon !== '' }]"
     >
       <div :class="['flip-tile-inner', { 'flip-action': clicked }]">
@@ -42,10 +42,6 @@ export default {
     tile: {
       type: Object,
       default: () => ({}),
-    },
-    index: {
-      type: Number,
-      default: 0,
     },
     icon: {
       type: String,

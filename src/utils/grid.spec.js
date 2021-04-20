@@ -1,7 +1,15 @@
-import { buildGrid, removeFromGrid, shuffle } from "./grid.js";
+import {
+  buildGrid,
+  removeFromDisplayedGrid,
+  shuffle,
+  setClickedOnGridItem,
+} from "./grid.js";
 
 const sampleGridItems = ["test1", "test2"];
-const sampleGrid = [{ slug: "test1" }, { slug: "test2" }];
+const sampleGrid = [
+  { slug: "test1", display: true, key: "test1-1", clicked: false },
+  { slug: "test2", display: true, key: "test2-1", clicked: false },
+];
 
 describe("buildGrid", () => {
   it("Properly builds grid", () => {
@@ -11,25 +19,49 @@ describe("buildGrid", () => {
         slug: "test2",
         key: "test2-1",
         clicked: false,
-        sibling: { slug: "test2", key: "test2-2", clicked: false },
+        display: true,
+        sibling: {
+          slug: "test2",
+          key: "test2-2",
+          clicked: false,
+          display: true,
+        },
       },
       {
         slug: "test2",
         key: "test2-2",
         clicked: false,
-        sibling: { slug: "test2", key: "test2-1", clicked: false },
+        display: true,
+        sibling: {
+          slug: "test2",
+          key: "test2-1",
+          clicked: false,
+          display: true,
+        },
       },
       {
         slug: "test1",
         key: "test1-1",
         clicked: false,
-        sibling: { slug: "test1", key: "test1-2", clicked: false },
+        display: true,
+        sibling: {
+          slug: "test1",
+          key: "test1-2",
+          clicked: false,
+          display: true,
+        },
       },
       {
         slug: "test1",
         key: "test1-2",
         clicked: false,
-        sibling: { slug: "test1", key: "test1-1", clicked: false },
+        display: true,
+        sibling: {
+          slug: "test1",
+          key: "test1-1",
+          clicked: false,
+          display: true,
+        },
       },
     ]);
   });
@@ -39,10 +71,20 @@ describe("buildGrid", () => {
   });
 });
 
-describe("removeFrom", () => {
-  it("Properly removes tiles from grid", () => {
-    expect(removeFromGrid("test1", sampleGrid)).toStrictEqual([
-      { slug: "test2" },
+describe("removeFromDisplayedGrid", () => {
+  it("Properly sets display property on tiles on grid", () => {
+    expect(removeFromDisplayedGrid("test1", sampleGrid)).toStrictEqual([
+      { slug: "test1", key: "test1-1", display: false, clicked: false },
+      { slug: "test2", key: "test2-1", display: true, clicked: false },
+    ]);
+  });
+});
+
+describe("setClickedOnGridItem", () => {
+  it("Properly sets clicked property on tiles on grid", () => {
+    expect(setClickedOnGridItem("test1-1", true, sampleGrid)).toStrictEqual([
+      { slug: "test1", key: "test1-1", display: true, clicked: true },
+      { slug: "test2", key: "test2-1", display: true, clicked: false },
     ]);
   });
 });

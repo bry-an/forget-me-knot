@@ -1,21 +1,30 @@
 <template>
-  Status: {{ statusMessage }}
+  <memory-grid-status
+    :status-message="statusMessage"
+    :wrong-answer="wrongAnswer"
+    :right-answer="rightAnswer"
+  />
   <div class="grid grid-cols-6 gap-x-3 gap-y-3 xl:gap-y-6">
-    <memory-grid-tile
-      @select-tile="selectTile"
-      v-for="(tile, i) in grid"
-      :key="tile.key"
-      :tile="tile"
-      :index="i"
-      :class="{ shake: tile.clicked && wrongAnswer }"
-      :icon="getTileOverlay(tile)"
-    />
+    <div v-for="tile in grid" :key="tile.key" class="flex justify-center">
+      <memory-grid-tile
+        @select-tile="selectTile"
+        :tile="tile"
+        :class="{ shake: tile.clicked && wrongAnswer }"
+        :icon="getTileOverlay(tile)"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import MemoryGridTile from "./MemoryGridTile.vue";
-import { buildGrid, removeFromGrid, shuffle } from "../utils/grid.js";
+import MemoryGridStatus from "./MemoryGridStatus.vue";
+import {
+  buildGrid,
+  removeFromDisplayedGrid,
+  shuffle,
+  setClickedOnGridItem,
+} from "../utils/grid.js";
 import { fetchImagesByQuery } from "../api/giphyClient.js";
 import { getFixedImages } from "../utils/apiParser.js";
 import take from "ramda/src/take";
@@ -30,17 +39,18 @@ export default {
     selectedTile: null,
     wrongAnswer: false,
     rightAnswer: false,
-    statusMessage: "Select a card",
+    statusMessage: "Select a card!",
     statusMessages: {
-      default: "Select a card",
+      default: "Select a card!",
       wrong: "Try again!",
-      correct: "Correct!",
+      right: "Correct!",
     },
-    gameStatus: true,
+    gameIsRunning: true,
     timers: [],
   }),
   components: {
     MemoryGridTile,
+    MemoryGridStatus,
   },
   methods: {
     getTileOverlay(tile) {
@@ -49,14 +59,11 @@ export default {
       return "";
     },
     setStatusMessage(status) {
-      this.statusMessage = status;
+      this.delayed(() => (this.statusMessage = status))(0.8);
       this.delayed(() => (this.statusMessage = this.statusMessages.default))(3);
     },
     checkCorrectSelection(tile) {
       return this.selectedTile.sibling.key === tile.key;
-    },
-    delay(fn, seconds) {
-      this.timers.push(setTimeout(fn, seconds * 1000));
     },
     delayed(fn) {
       return (seconds, ...args) =>
@@ -64,16 +71,21 @@ export default {
           setTimeout(() => fn.apply(this, args), seconds * 1000)
         );
     },
-    selectTile(tile, i) {
-      this.grid[i].clicked = true;
+    selectTile(tile) {
+      this.grid = setClickedOnGridItem(tile.key, true, this.grid);
       if (!this.selectedTile) {
         this.selectedTile = tile;
         return;
       }
-      if (this.selectedTile.key === tile.key) return; // selected same tile, short-circuit rest of check
+      if (this.selectedTile.key === tile.key) {
+        // selected same tile, unselect it
+        this.selectedTile = null;
+        this.grid = setClickedOnGridItem(tile.key, false, this.grid);
+        return;
+      }
       if (this.checkCorrectSelection(tile)) {
         this.delayed(this.removeTile)(3, tile);
-        this.setStatusMessage(this.statusMessages.correct);
+        this.setStatusMessage(this.statusMessages.right);
         this.setAnswer("rightAnswer");
       } else {
         this.setAnswer("wrongAnswer");
@@ -90,7 +102,7 @@ export default {
       this.grid = map(assoc("clicked", false), this.grid);
     },
     removeTile(tile) {
-      this.grid = removeFromGrid(tile.slug, this.grid);
+      this.grid = removeFromDisplayedGrid(tile.slug, this.grid);
     },
     buildGridFromGiphyImages(json) {
       const takeN = take(this.gridSize / 2);
@@ -100,7 +112,7 @@ export default {
   watch: {
     grid(newVal) {
       if (newVal.length === 0) {
-        this.gameStatus = false;
+        this.gameIsRunning = false;
       }
     },
   },
