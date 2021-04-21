@@ -43,7 +43,10 @@ $screen-xxl: 1536px;
 }
 
 h1 {
+    @include lg {
     font-size: 6.1667em ; 
+    }
+    font-size: 3.0833em ; 
 }
 h2 {
     font-size: 3.0833em;
@@ -51,9 +54,14 @@ h2 {
 h3 {
     font-size: 2.0417em;
 }
+
 h4 {
-    font-size: 1.5417em;
+    @include lg {
+        font-size: 1.5417em;
+    }
+    font-size: 1em;
 }
+
 h5 {
     font-size: 1.3542em;
 }

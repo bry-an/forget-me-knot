@@ -1,6 +1,6 @@
 <template>
-  <div class="bg-pebble py-1">
-    <div class="w-9/12 mx-auto my-3 wrapper">
+  <div class="bg-pebble py-1 min-h-screen">
+    <div class="xl:w-7/12 w-11/12 mx-auto mt-3 mb-8 wrapper">
       <slot />
     </div>
   </div>
