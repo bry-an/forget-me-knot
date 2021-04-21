@@ -6,7 +6,8 @@
     :remaining-tiles="remainingTiles"
   />
   <div
-    class="grid grid-cols-4 lg:grid-cols-6 gap-x-3 gap-y-3 xl:gap-y-6 m-auto"
+    v-if="gameIsRunning"
+    class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-x-3 gap-y-3 xl:gap-y-6 mx-auto mt-8"
   >
     <div v-for="tile in grid" :key="tile.key" class="flex justify-center">
       <memory-grid-tile
@@ -17,6 +18,20 @@
       />
     </div>
   </div>
+  <div v-else class="flex flex-col items-center justify-center mt-8">
+    <img src="../assets/images/murray-celebrate.gif" class="rounded-md" />
+    <div>
+      <button
+        @click="resetGame"
+        class="border rounded-md mt-6 p-2 bg-mint hover:bg-terracotta"
+      >
+        <h4 class="text-plum play-again">Play Again!</h4>
+      </button>
+    </div>
+  </div>
+  <div v-if="error" class="flex flex-col items-center justify-center mt-8">
+    That's an error! Please refresh the page to try again.
+  </div>
 </template>
 
 <script>
@@ -25,8 +40,8 @@ import MemoryGridStatus from "./MemoryGridStatus.vue";
 import {
   buildGrid,
   removeFromDisplayedGrid,
-  shuffle,
   setClickedOnGridItem,
+  resetGrid,
 } from "../utils/grid.js";
 import { fetchImagesByQuery } from "../api/giphyClient.js";
 import { getFixedImages } from "../utils/apiParser.js";
@@ -37,7 +52,6 @@ import compose from "ramda/src/compose";
 import filter from "ramda/src/filter";
 import propEq from "ramda/src/propEq";
 import length from "ramda/src/length";
-import not from "ramda/src/length";
 export default {
   name: "MemoryGrid",
   data: () => ({
@@ -51,10 +65,12 @@ export default {
       default: "Select a card",
       wrong: "Try again",
       right: "Correct!",
+      won: "You won!!",
     },
     gameIsRunning: true,
     timers: [],
     loading: false,
+    error: false,
   }),
   components: {
     MemoryGridTile,
@@ -97,7 +113,6 @@ export default {
         this.delayed(this.hideTile)(3, tile);
         this.setStatusMessage(this.statusMessages.right);
         this.setAnswer("rightAnswer");
-        this.gameIsRunning = this.checkEndOfGame() ? false : true;
       } else {
         this.setAnswer("wrongAnswer");
         this.setStatusMessage(this.statusMessages.wrong);
@@ -116,17 +131,25 @@ export default {
       this.grid = removeFromDisplayedGrid(tile.slug, this.grid);
     },
     buildGridFromGiphyImages(json) {
-      console.log("the data", JSON.stringify(json.data[0]));
       const takeN = take(this.gridSize / 2); // n size grid requires n/2 images
-      this.grid = compose(shuffle, buildGrid, getFixedImages)(takeN, json.data);
+      this.grid = compose(buildGrid, getFixedImages)(takeN, json.data);
     },
-    checkEndOfGame() {
-      return not(this.remainingTiles);
+    checkGameStillRunning() {
+      return this.remainingTiles > 0;
     },
     getImages() {
       return fetchImagesByQuery({ q: "bill murray" })
         .then((res) => res.json())
         .then(this.buildGridFromGiphyImages);
+    },
+    endGame() {
+      this.gameIsRunning = false;
+      this.setStatusMessage(this.statusMessages.won);
+    },
+    resetGame() {
+      this.setStatusMessage(this.statusMessages.default);
+      this.gameIsRunning = true;
+      this.grid = resetGrid(this.grid);
     },
   },
   computed: {
@@ -137,20 +160,38 @@ export default {
   },
   mounted() {
     this.loading = true;
-    this.getImages().then(() => (this.loading = false));
+    this.getImages()
+      .then(() => (this.loading = false))
+      .catch((e) => {
+        this.loading = false;
+        this.error = true;
+        console.error(e);
+      });
   },
   unmounted() {
     this.timers.length && this.timers.forEach((t) => clearTimeout(t));
   },
+  watch: {
+    remainingTiles(newVal) {
+      if (newVal === 0) {
+        this.endGame();
+      }
+    },
+  },
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import "@/assets/styles/appStyles.scss";
 .shake {
   animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
   perspective: 1000px;
+}
+
+.play-again {
+  font-family: "Press Start 2P", cursive;
 }
 
 @keyframes shake {

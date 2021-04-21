@@ -12,6 +12,7 @@ export default {
     name: {
       type: String,
       default: "",
+      validator: (val) => ["wrong-icon", "right-icon"].includes(val),
     },
     scale: {
       type: [Number, String],

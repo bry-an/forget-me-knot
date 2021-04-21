@@ -1,16 +1,12 @@
+import map from "ramda/src/map";
 import {
   buildGrid,
   removeFromDisplayedGrid,
   shuffle,
   setClickedOnGridItem,
+  resetGrid,
 } from "./grid.js";
-
-const sampleGridItems = ["test1", "test2"];
-const sampleGrid = [
-  { slug: "test1", display: true, key: "test1-1", clicked: false },
-  { slug: "test2", display: true, key: "test2-1", clicked: false },
-];
-
+import { sampleGridItems, sampleGrid } from "./__mocks__/sampleGridItems.js";
 describe("buildGrid", () => {
   it("Properly builds grid", () => {
     const grid = buildGrid(sampleGridItems);
@@ -98,5 +94,12 @@ describe("Shuffle", () => {
     expect(sampleArr.filter((name) => name === "test1")).toStrictEqual(
       shuffled.filter((name) => name === "test1")
     );
+  });
+});
+
+describe("resetGrid", () => {
+  it("Properly resets grid", () => {
+    const completedGrid = map((o) => (o.display = false), sampleGrid);
+    expect(resetGrid(completedGrid).every((o) => o.display === true));
   });
 });

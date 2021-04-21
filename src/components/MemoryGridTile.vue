@@ -1,5 +1,7 @@
 <template>
-  <div v-show="tile.display" class="relative">
+  <div
+    :class="['relative', { visible: tile.display, invisible: !tile.display }]"
+  >
     <app-icon
       v-if="icon"
       :scale="4"
@@ -7,8 +9,9 @@
       :name="icon"
     />
     <div
-      @click="$emit('select-tile', tile)"
+      @click="tile.display && $emit('select-tile', tile)"
       :class="['flip-tile cursor-pointer', { mask: icon !== '' }]"
+      data-test="flip-tile"
     >
       <div :class="['flip-tile-inner', { 'flip-action': clicked }]">
         <div class="flip-tile-front">
@@ -25,6 +28,7 @@
             alt="memory-game-tile"
             class="rounded-md"
             width="150"
+            data-test="image-under-tile"
           />
         </div>
       </div>
@@ -103,7 +107,7 @@ export default {
 .flip-tile-back {
   width: 150px;
   height: 150px;
-  background-color: white;
+  background-color: $mem-pebble;
   transform: rotateY(180deg);
 }
 

@@ -7,13 +7,11 @@ import map from "ramda/src/map";
 import sort from "ramda/src/sort";
 import dissoc from "ramda/src/dissoc";
 import when from "ramda/src/when";
-import head from "ramda/src/head";
-import last from "ramda/src/last";
 
-const tiePair = (pair) => [
-  assoc("sibling", last(pair), head(pair)),
-  assoc("sibling", head(pair), last(pair)),
-];
+const tiePair = (pair) => {
+  const [first, second] = pair;
+  return [assoc("sibling", second, first), assoc("sibling", first, second)];
+};
 
 const generatePair = (slug) => [
   { slug, key: `${slug}-1`, clicked: false, display: true },
@@ -26,11 +24,16 @@ const addTileToGrid = (grid, tile) => concat(generateLinkedItems(tile), grid);
 
 const buildGrid = reduce(addTileToGrid, []);
 
+const setDisplay = assoc("display");
+const setClicked = assoc("clicked");
+const setDisplayTrue = setDisplay(true);
+const setDisplayFalse = setDisplay(false);
+
 const removeFromDisplayedGrid = (slug, grid) =>
-  map(when(propEq("slug", slug), assoc("display", false)), grid);
+  map(when(propEq("slug", slug), setDisplayFalse), grid);
 
 const setClickedOnGridItem = (key, clicked, grid) =>
-  map(when(propEq("key", key), assoc("clicked", clicked)), grid);
+  map(when(propEq("key", key), setClicked(clicked)), grid);
 
 /**
  * Associates random number with each item, sorts based on random number, disassociates random number
@@ -46,4 +49,12 @@ const shuffle = (arr) =>
     )
   );
 
-export { buildGrid, removeFromDisplayedGrid, shuffle, setClickedOnGridItem };
+const resetGrid = compose(shuffle, map(setDisplayTrue));
+
+export {
+  buildGrid,
+  removeFromDisplayedGrid,
+  shuffle,
+  setClickedOnGridItem,
+  resetGrid,
+};
