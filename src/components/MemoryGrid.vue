@@ -18,8 +18,12 @@
       />
     </div>
   </div>
-  <div v-else class="flex flex-col items-center justify-center mt-8">
-    <img src="../assets/images/murray-celebrate.gif" class="rounded-md" />
+  <div
+    v-else
+    class="flex flex-col items-center justify-center mt-8"
+    data-test="game-over"
+  >
+    <img src="https://rb.gy/7ymrtx" class="rounded-md" />
     <div>
       <button
         @click="resetGame"
@@ -110,15 +114,21 @@ export default {
         return;
       }
       if (this.checkCorrectSelection(tile)) {
-        this.delayed(this.hideTile)(3, tile);
-        this.setStatusMessage(this.statusMessages.right);
-        this.setAnswer("rightAnswer");
+        this.handleCorrectAnswer(tile);
       } else {
-        this.setAnswer("wrongAnswer");
-        this.setStatusMessage(this.statusMessages.wrong);
+        this.handleWrongAnswer();
       }
       this.selectedTile = null;
       this.delayed(this.resetClickedProperties)(3); // second tile clicked, reset `clicked`
+    },
+    handleWrongAnswer() {
+      this.setAnswer("wrongAnswer");
+      this.setStatusMessage(this.statusMessages.wrong);
+    },
+    handleCorrectAnswer(tile) {
+      this.delayed(this.hideTile)(3, tile);
+      this.setStatusMessage(this.statusMessages.right);
+      this.setAnswer("rightAnswer");
     },
     setAnswer(status) {
       this.delayed(() => (this[status] = true))(0.8); // give tile chance to flip before marking
