@@ -1,5 +1,5 @@
 import MemoryGridTile from "../MemoryGridTile.vue";
-import { shallowMount } from "@vue/test-utils";
+import { componentMountFactory } from "../../test/componentTestFactory.js";
 
 const visibleSampleTile = {
   slug:
@@ -23,13 +23,15 @@ const nonvisibleSampleTile = {
   display: false,
 };
 
+const buildComponentWrapper = componentMountFactory(MemoryGridTile);
+
 describe("MemoryGridTile", () => {
   it("Mounts", () => {
-    const wrapper = shallowMount(MemoryGridTile);
+    const wrapper = buildComponentWrapper();
     expect(wrapper.exists()).toBeTruthy();
   });
   it("Correctly loads the tile's image in the card's underside", () => {
-    const wrapper = shallowMount(MemoryGridTile, {
+    const wrapper = buildComponentWrapper({
       propsData: {
         tile: visibleSampleTile,
       },
@@ -39,7 +41,7 @@ describe("MemoryGridTile", () => {
     );
   });
   it("Does not show tile if visible set to false", () => {
-    const wrapper = shallowMount(MemoryGridTile, {
+    const wrapper = buildComponentWrapper({
       propsData: {
         tile: nonvisibleSampleTile,
       },
@@ -47,7 +49,7 @@ describe("MemoryGridTile", () => {
     expect(wrapper.find("[data-test=flip-tile]").isVisible()).toBe(false);
   });
   it("Matches visible snapshot", () => {
-    const wrapper = shallowMount(MemoryGridTile, {
+    const wrapper = buildComponentWrapper({
       propsData: {
         tile: visibleSampleTile,
       },
@@ -55,7 +57,7 @@ describe("MemoryGridTile", () => {
     expect(wrapper.element).toMatchSnapshot();
   });
   it("Matches nonvisible snapshot", () => {
-    const wrapper = shallowMount(MemoryGridTile, {
+    const wrapper = buildComponentWrapper({
       propsData: {
         tile: nonvisibleSampleTile,
       },
