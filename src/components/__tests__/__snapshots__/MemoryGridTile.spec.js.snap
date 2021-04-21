@@ -1,0 +1,78 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MemoryGridTile Matches nonvisible snapshot 1`] = `
+<div
+  class="relative"
+  style="display: none;"
+>
+  <!--v-if-->
+  <div
+    class="flip-tile cursor-pointer"
+    data-test="flip-tile"
+  >
+    <div
+      class="flip-tile-inner"
+    >
+      <div
+        class="flip-tile-front"
+      >
+        <img
+          alt="memory-card-front"
+          class="rounded-md"
+          src=""
+        />
+      </div>
+      <div
+        class="flip-tile-back flex items-center rounded-md"
+      >
+        <img
+          alt="memory-game-tile"
+          class="rounded-md"
+          data-test="image-under-tile"
+          src="https://media0.giphy.com/media/3otPotnGlA5FSF2fKw/200.gif?cid=efc6841ejd0hn2k52nkal7r914iiteuuttvc571t7krnx9ye&rid=200.gif&ct=g"
+          style="background: url(https://media0.giphy.com/media/3otPotnGlA5FSF2fKw/200.gif?cid=efc6841ejd0hn2k52nkal7r914iiteuuttvc571t7krnx9ye&rid=200.gif&ct=g);"
+          width="150"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`MemoryGridTile Matches visible snapshot 1`] = `
+<div
+  class="relative"
+>
+  <!--v-if-->
+  <div
+    class="flip-tile cursor-pointer"
+    data-test="flip-tile"
+  >
+    <div
+      class="flip-tile-inner"
+    >
+      <div
+        class="flip-tile-front"
+      >
+        <img
+          alt="memory-card-front"
+          class="rounded-md"
+          src=""
+        />
+      </div>
+      <div
+        class="flip-tile-back flex items-center rounded-md"
+      >
+        <img
+          alt="memory-game-tile"
+          class="rounded-md"
+          data-test="image-under-tile"
+          src="https://media0.giphy.com/media/3otPotnGlA5FSF2fKw/200.gif?cid=efc6841ejd0hn2k52nkal7r914iiteuuttvc571t7krnx9ye&rid=200.gif&ct=g"
+          style="background: url(https://media0.giphy.com/media/3otPotnGlA5FSF2fKw/200.gif?cid=efc6841ejd0hn2k52nkal7r914iiteuuttvc571t7krnx9ye&rid=200.gif&ct=g);"
+          width="150"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
