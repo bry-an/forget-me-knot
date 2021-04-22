@@ -5,8 +5,8 @@ import {
   shuffle,
   setClickedOnGridItem,
   resetGrid,
-} from "./grid.js";
-import { sampleGridItems, sampleGrid } from "./__mocks__/sampleGridItems.js";
+} from "../grid.js";
+import { sampleGridItems, sampleGrid } from "../__mocks__/sampleGridItems.js";
 describe("buildGrid", () => {
   it("Properly builds grid", () => {
     const grid = buildGrid(sampleGridItems);

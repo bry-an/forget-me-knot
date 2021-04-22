@@ -76,11 +76,10 @@ describe("selectTile", () => {
 });
 
 describe("End of game", () => {
-  it("sets gameIsRunning to false and displays won message if no items displayed", () => {
+  test("sets gameIsRunning to false and displays won message if no items displayed", () => {
     const sampleGrid = [{ slug: "test-slug-1", display: true }];
     const wrapper = mountComponent();
     wrapper.vm.grid = sampleGrid;
-    wrapper.vm.endGame = jest.fn();
     wrapper.vm.hideTile(sampleGrid[0]);
     // watchers are deferred to next update cycle
     wrapper.vm.$nextTick(() => {
@@ -88,11 +87,10 @@ describe("End of game", () => {
       expect(wrapper.vm.statusMessage).toBe(wrapper.vm.statusMessages.won);
     });
   });
-  it("Displays game-over text", () => {
+  test("Displays game-over text", () => {
     const sampleGrid = [{ slug: "test-slug-1", display: true }];
     const wrapper = mountComponent();
     wrapper.vm.grid = sampleGrid;
-    wrapper.vm.endGame = jest.fn();
     wrapper.vm.hideTile(sampleGrid[0]);
     const gameOverDiv = wrapper.find("[data-test=game-over]");
     wrapper.vm.$nextTick(() => {

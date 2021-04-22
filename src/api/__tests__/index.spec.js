@@ -1,4 +1,4 @@
-import { buildUrl, buildRequest } from "./index.js";
+import { buildUrl, buildRequest } from "../index.js";
 import toPairs from "ramda/src/toPairs";
 
 const testUrl = "test.com?q=1";
@@ -6,7 +6,7 @@ const params = { query: "search", name: "testName" };
 
 describe("buildUrl", () => {
   it("Correctly builds URL with param pairs", () => {
-    const url = buildUrl(testUrl)(toPairs(params));
+    const url = buildUrl(testUrl, toPairs(params));
     expect(url).toBe("test.com?q=1&query=search&name=testName");
   });
 });

@@ -46,7 +46,7 @@ describe("MemoryGridTile", () => {
         tile: nonvisibleSampleTile,
       },
     });
-    expect(wrapper.find("[data-test=flip-tile]").isVisible()).toBe(false);
+    expect(wrapper.find("[data-test=flip-tile]").classes().visible).toBeFalsy();
   });
   it("Matches visible snapshot", () => {
     const wrapper = buildComponentWrapper({

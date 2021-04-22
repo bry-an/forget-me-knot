@@ -1,5 +1,5 @@
-import { getFixedImages } from "./apiParser.js";
-import sampleApiResponse from "./__mocks__/sampleGiphyApiResponse.js";
+import { getFixedImages } from "../apiParser.js";
+import sampleApiResponse from "../__mocks__/sampleGiphyApiResponse.js";
 import take from "ramda/src/take";
 
 describe("getFixedImages", () => {

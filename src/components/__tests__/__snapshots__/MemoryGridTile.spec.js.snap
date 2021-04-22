@@ -2,8 +2,7 @@
 
 exports[`MemoryGridTile Matches nonvisible snapshot 1`] = `
 <div
-  class="relative"
-  style="display: none;"
+  class="relative invisible"
 >
   <!--v-if-->
   <div
@@ -41,7 +40,7 @@ exports[`MemoryGridTile Matches nonvisible snapshot 1`] = `
 
 exports[`MemoryGridTile Matches visible snapshot 1`] = `
 <div
-  class="relative"
+  class="relative visible"
 >
   <!--v-if-->
   <div
