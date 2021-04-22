@@ -9,7 +9,7 @@
     >
       > {{ statusMessage }}
     </h4>
-    <h4 class="text-mint">Tiles remaining: {{ remainingTiles }}</h4>
+    <h4 class="text-mint">Cards remaining: {{ remainingTiles }}</h4>
   </div>
 </template>
 <script>
