@@ -5,6 +5,9 @@
     :right-answer="rightAnswer"
     :remaining-tiles="remainingTiles"
   />
+  <div v-if="loading" class="text-center">
+    Please wait while your game loads...
+  </div>
   <div
     v-if="gameIsRunning"
     class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-x-3 gap-y-3 xl:gap-y-6 mx-auto mt-8"
