@@ -36,7 +36,7 @@ const setClickedOnGridItem = (key, clicked, grid) =>
   map(when(propEq("key", key), setClicked(clicked)), grid);
 
 /**
- * Associates random number with each item, sorts based on random number, disassociates random number
+ * Associates random number with each item, sorts based on random number, dissociates random number
  * @param {Array} Array to be shuffled
  * @returns Array
  */

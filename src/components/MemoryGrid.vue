@@ -46,6 +46,7 @@ import {
   removeFromDisplayedGrid,
   setClickedOnGridItem,
   resetGrid,
+  shuffle,
 } from "../utils/grid.js";
 import { fetchImagesByQuery } from "../api/giphyClient.js";
 import { getFixedImages } from "../utils/apiParser.js";
@@ -75,6 +76,7 @@ export default {
     timers: [],
     loading: false,
     error: false,
+    theme: "bill murray",
   }),
   components: {
     MemoryGridTile,
@@ -131,7 +133,7 @@ export default {
       this.setAnswer("rightAnswer");
     },
     setAnswer(status) {
-      this.delayed(() => (this[status] = true))(0.8); // give tile chance to flip before marking
+      this.delayed(() => (this[status] = true))(0.8); // give tile chance to flip before showing answer
       this.delayed(() => (this[status] = false))(3); // reset
     },
     resetClickedProperties() {
@@ -142,13 +144,13 @@ export default {
     },
     buildGridFromGiphyImages(json) {
       const takeN = take(this.gridSize / 2); // n size grid requires n/2 images
-      this.grid = compose(buildGrid, getFixedImages)(takeN, json.data);
+      this.grid = compose(shuffle, buildGrid, getFixedImages)(takeN, json.data);
     },
     checkGameStillRunning() {
       return this.remainingTiles > 0;
     },
     getImages() {
-      return fetchImagesByQuery({ q: "bill murray" })
+      return fetchImagesByQuery({ q: this.theme })
         .then((res) => res.json())
         .then(this.buildGridFromGiphyImages);
     },
