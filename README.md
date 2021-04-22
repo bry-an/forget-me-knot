@@ -4,14 +4,20 @@
 
 ## Description and gameplay
 
-A Bill Murray themed Memory game. Click a card to reveal the image underneath. Click another card to reveal its image. If the images are identical, those tiles are removed. Otherwise, they stay and the game continues. Remove all tiles to win!
+A Bill Murray themed Memory game written in Vue.js. Click a card to reveal the image underneath. Click another card to reveal its image. If the images are identical, those tiles are removed. Otherwise, they stay and the game continues. Remove all tiles to win!
 
 ## Documentation
 
 ### Running Locally
 
 ```sh
-npm install && npm run serve
+npm install
+```
+
+### Dev server
+
+```sh
+npm run serve
 ```
 
 ### Running tests
