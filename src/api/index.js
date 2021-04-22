@@ -1,20 +1,30 @@
 import concat from "ramda/src/concat";
 import reduce from "ramda/src/reduce";
-import head from "ramda/src/head";
-import last from "ramda/src/last";
-import compose from "ramda/src/compose";
 import curry from "ramda/src/curry";
 import toPairs from "ramda/src/toPairs";
 
-const buildQueryParams = (url, param) =>
-  reduce(concat, url, ["&", head(param), "=", last(param)]);
+/**
+ * Reducer function that concats query params onto url
+ * @param {String} url
+ * @param {Array} param
+ * @returns String url with params appended
+ */
+const buildQueryParams = (url, param) => {
+  const [key, value] = param;
+  return reduce(concat, url, ["&", key, "=", value]);
+};
 
-const buildUrl = curry((baseUrl, params) =>
-  reduce(buildQueryParams, baseUrl, params)
-);
+/**
+ * Concats all query params onto base url with above reducer function
+ */
+const buildUrl = (baseUrl, params) => reduce(buildQueryParams, baseUrl, params);
 
-const buildRequest = curry((baseUrl, client, params) =>
-  compose(client, buildUrl(baseUrl))(toPairs(params))
-);
+/**
+ * Builds url, composes result into client -- works out of the box with fetch
+ */
+const buildRequest = curry((baseUrl, client, params) => {
+  const fullUrl = buildUrl(baseUrl, toPairs(params));
+  return client(fullUrl);
+});
 
 export { buildUrl, buildRequest };
