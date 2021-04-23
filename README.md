@@ -2,7 +2,6 @@
 
 [![Memurray Screenshot](./memurray-screen.png)](https://bryan.computer)
 
-
 ## [https://bryan.computer/](https://bryan.computer/)
 
 ## Description and gameplay
@@ -28,6 +27,8 @@ npm run serve
 ```sh
 npm run test:unit
 ```
+
+Note that this app uses the [Giphy API](https://developers.giphy.com/), so running locally requires an API key in the .env file which is not committed to this repo to protect its integrity. Please contact Bryan or request an API key and put it in an .env file with the name `VUE_APP_API_KEY` in order to run the app locally.
 
 ## Details
 

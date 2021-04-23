@@ -26,7 +26,7 @@
     class="flex flex-col items-center justify-center mt-8"
     data-test="game-over"
   >
-    <img src="https://rb.gy/7ymrtx" class="rounded-md" />
+    <img src="https://rb.gy/7ymrtx" class="rounded-md" alt="game-over" />
     <div>
       <button
         @click="resetGame"
