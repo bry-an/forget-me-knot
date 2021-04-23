@@ -92,7 +92,7 @@ export default {
       return "";
     },
     setStatusMessage(status) {
-      this.delayed(() => (this.statusMessage = status))(0.8);
+      this.statusMessage = status;
       this.delayed(() => (this.statusMessage = this.statusMessages.default))(3);
     },
     checkCorrectSelection(tile) {
@@ -136,7 +136,7 @@ export default {
       this.setAnswer("rightAnswer");
     },
     setAnswer(status) {
-      this.delayed(() => (this[status] = true))(0.8); // give tile chance to flip before showing answer
+      this.delayed(() => (this[status] = true))(0.1); // give tile chance to flip before showing answer
       this.delayed(() => (this[status] = false))(3); // reset
     },
     resetClickedProperties() {
