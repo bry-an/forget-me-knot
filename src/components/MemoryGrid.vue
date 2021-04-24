@@ -136,7 +136,7 @@ export default {
       this.setAnswer("rightAnswer");
     },
     setAnswer(status) {
-      this.delayed(() => (this[status] = true))(0.1); // give tile chance to flip before showing answer
+      this[status] = true;
       this.delayed(() => (this[status] = false))(3); // reset
     },
     resetClickedProperties() {
