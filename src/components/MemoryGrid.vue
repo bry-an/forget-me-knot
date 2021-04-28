@@ -118,13 +118,13 @@ export default {
         return;
       }
       // second tile picked, delay all input for a second
-      this.disableInput();
       if (this.selectedTile.key === tile.key) {
         // selected same tile, unselect it
         this.selectedTile = null;
         this.grid = setClickedOnGridItem(tile.key, false, this.grid);
         return;
       }
+      this.disableInput();
       if (this.checkCorrectSelection(tile)) {
         this.handleCorrectAnswer(tile);
       } else {
