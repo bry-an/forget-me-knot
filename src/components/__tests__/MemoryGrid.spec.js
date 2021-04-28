@@ -1,4 +1,3 @@
-import flushPromises from "flush-promises";
 import MemoryGrid from "../MemoryGrid.vue";
 import { componentMountFactory } from "../../test/componentTestFactory.js";
 
@@ -6,6 +5,8 @@ jest.mock("../../api/giphyClient.js", () => ({
   fetchImagesByQuery: () =>
     Promise.resolve({ json: () => Promise.resolve({ data: [] }) }),
 }));
+jest.useFakeTimers();
+
 const mountComponent = componentMountFactory(MemoryGrid);
 
 describe("MemoryGrid", () => {
@@ -16,16 +17,16 @@ describe("MemoryGrid", () => {
 });
 
 describe("Set answer and status methods", () => {
-  test("setStatusMessage reverts back to default after timeout", async () => {
+  test("setStatusMessage reverts back to default after timeout", () => {
     const wrapper = mountComponent();
     wrapper.vm.setStatusMessage(wrapper.vm.statusMessages.right);
-    await flushPromises();
+    jest.runAllTimers();
     expect(wrapper.vm.statusMessage).toBe(wrapper.vm.statusMessages.default);
   });
-  test("setAnswer reverts back to default after timeout", async () => {
+  test("setAnswer reverts back to default after timeout", () => {
     const wrapper = mountComponent();
     wrapper.vm.setAnswer("wrongAnswer");
-    await flushPromises();
+    jest.runAllTimers();
     expect(wrapper.vm.wrongAnswer).toBe(false);
   });
   test("checkCorrectSelection checks if sibling key of first tile matches key of second tile", () => {
@@ -72,6 +73,25 @@ describe("selectTile", () => {
     expect(wrapper.vm.setStatusMessage).toHaveBeenCalledWith(
       wrapper.vm.statusMessages.wrong
     );
+  });
+  it("Sets inputDisabled to true immediately upon clicking second tile, then resets to false", () => {
+    const firstTile = { key: "test-key-1", sibling: { key: "test-key-2" } };
+    const secondTile = { key: "LOL", sibling: { key: "LOL" } };
+    const wrapper = mountComponent();
+    wrapper.vm.selectedTile = firstTile;
+    wrapper.vm.selectTile(secondTile);
+    expect(wrapper.vm.inputDisabled).toBe(true);
+    jest.runAllTimers();
+    expect(wrapper.vm.inputDisabled).toBe(false);
+  });
+  it("Does nothing if inputDisabled", () => {
+    const sampleTile = { key: "test-key-1", sibling: { key: "test-key-2" } };
+    const wrapper = mountComponent();
+    wrapper.vm.inputDisabled = true;
+    wrapper.vm.checkCorrectSelection = jest.fn();
+    wrapper.vm.selectTile(sampleTile);
+    expect(wrapper.vm.selectedTile).toBe(null); // tile should not be selected, function should return immediately
+    expect(wrapper.vm.checkCorrectSelection).not.toHaveBeenCalled();
   });
 });
 

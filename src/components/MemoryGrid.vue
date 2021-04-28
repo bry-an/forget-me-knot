@@ -80,6 +80,7 @@ export default {
     loading: false,
     error: false,
     theme: "bill murray",
+    inputDisabled: false,
   }),
   components: {
     MemoryGridTile,
@@ -92,8 +93,12 @@ export default {
       return "";
     },
     setStatusMessage(status) {
-      this.statusMessage = status;
+      this.delayed(() => (this.statusMessage = status))(0.8); // wait one second before displaying result
       this.delayed(() => (this.statusMessage = this.statusMessages.default))(3);
+    },
+    disableInput() {
+      this.inputDisabled = true;
+      this.delayed(() => (this.inputDisabled = false))(3);
     },
     checkCorrectSelection(tile) {
       return this.selectedTile.sibling.key === tile.key;
@@ -105,13 +110,15 @@ export default {
         );
     },
     selectTile(tile) {
-      if (this.wrongAnswer || this.rightAnswer) return; // time between turns, don't do anything
+      if (this.inputDisabled) return; // don't allow input when both tiles selected (between turns)
       this.grid = setClickedOnGridItem(tile.key, true, this.grid);
       if (!this.selectedTile) {
         // first tile picked, no need to check status
         this.selectedTile = tile;
         return;
       }
+      // second tile picked, delay all input for a second
+      this.disableInput();
       if (this.selectedTile.key === tile.key) {
         // selected same tile, unselect it
         this.selectedTile = null;
@@ -136,7 +143,7 @@ export default {
       this.setAnswer("rightAnswer");
     },
     setAnswer(status) {
-      this[status] = true;
+      this.delayed(() => (this[status] = true))(0.8); // set status after second delay
       this.delayed(() => (this[status] = false))(3); // reset
     },
     resetClickedProperties() {
